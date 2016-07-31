@@ -1,0 +1,57 @@
+@CHARSET "ISO-8859-1";
+
+ /* Styles de base */
+      body {
+        font-family: 'Bitter', serif;
+        background-color: #eef;
+        color: #259;
+		padding-top: 70px;
+      }
+      nav img {
+        width: 100%;
+      }
+
+	  .navbar
+	  {
+	  background-color: #def;
+	  }
+      /* Styles pour les smartphones */
+      #left, #side1, #side2 {
+        padding: 10px 10px 0 10px;
+      }
+
+      /* Styles pour les tablettes */
+      @media (min-width: 768px) {
+        #left{
+          padding: 0;
+        } 
+        #side1 {
+          padding: 10px 5px 0 0;
+        } 
+        #side2 {
+          padding: 10px 0 0 5px;
+        }
+      }
+
+      /* Styles pour les écrans moyens et grands */
+      @media (min-width: 992px) {
+        #side1, #side2 {
+          padding: 0 0 10px 10px;
+        } 
+      }
+	  
+	  .jumbotron {
+		background-color: #eef; 
+		margin-bottom: 15px;
+		}
+	.btn-lg {
+		width: 60px;
+		height: 60px;
+		border-radius: 30px;
+		}
+		
+ .inline-form input {
+  display: inline-block;
+  width: 100px;
+}
+ 
