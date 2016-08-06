@@ -28,20 +28,22 @@
 
 </head>
 <body>
-    
+ <div class="center">
+    <form method="post">
     <div class="container-fluide">
-	 <nav class="navbar navbar-inverse navbar-fixed-top">
+   
+	 <nav class="navbar navbar-inverse navbar-fixed-top navbar-form">
       
-    <form class="navbar-form">
-    fichier source: 
+      fichier source: 
       <input type="text" name="FileNameSource" id="FileNameSource" value="${ FileNameSource }" size="35px" />
+        <input class="btn btn-info" type="submit" name="charger" value="charger" />
         <c:if test="${ not empty FileNameDestination }">
-       		<a href="http://localhost:8080/Subtitlor${ FileNameDestination }" >
-    		    <button>fichier</button> 
+       		<a class="btn btn-info" href="http://localhost:8080/tomcat${ FileNameDestination }" >
+    		    fichier 
      		</a>
         </c:if>
-        <input type="submit" value="enregistrer" />
-    </form>
+        <input class="btn btn-info" type="submit" name="enregistrer" value="enregistrer" />
+   
 	</nav>
   
 
@@ -68,6 +70,9 @@
 	        				 </tr>	        	
 	    	</c:forEach>
 	    </table>
-    </div>
+	    </div>
+   
+     </form>
+      </div>
 </body>
 </html>

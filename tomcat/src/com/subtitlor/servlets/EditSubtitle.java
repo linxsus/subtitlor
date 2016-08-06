@@ -43,6 +43,12 @@ public class EditSubtitle extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+		String donnee;
+		donnee=request.getParameter("charger");
+	//si on appuis sur le bouton charger
+		if (donnee!=null && !donnee.isEmpty()) return;
+			
 		traitement.execut(request,response,traduitSrtDaoSql);
 		traduitSrtDaoFileOut.write(traduitSrtDaoSql.read());
 		request.setAttribute("FileNameDestination", FileNameDestination);
