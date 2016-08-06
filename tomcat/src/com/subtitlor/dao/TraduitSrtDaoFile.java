@@ -94,7 +94,6 @@ public class TraduitSrtDaoFile implements TraduitSrtDao {
 	{
 		try
 		{
-			System.out.println(fileName);
 			BufferedWriter bW;
 			bW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"));
 

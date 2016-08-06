@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,7 @@ import com.subtitlor.dao.TraduitSrtDaoFile;
 import com.subtitlor.utilities.TraduitSrtTraitement;
 
 @WebServlet("/EditSubtitle")
-public class EditSubtitle extends HttpServlet {
+@MultipartConfig() public class EditSubtitle extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String FileNameSource = "/WEB-INF/password_presentation.srt";
 	private TraduitSrtDao traduitSrtDaoSql;
@@ -46,11 +47,19 @@ public class EditSubtitle extends HttpServlet {
 	
 		String donnee;
 		donnee=request.getParameter("charger");
+		System.out.println(donnee);
 	//si on appuis sur le bouton charger
-		if (donnee!=null && !donnee.isEmpty()) return;
-			
+		if (donnee!=null && !donnee.isEmpty()) 
+		{
+			System.out.println("test1");
+			traitement.chargement(request,response,traduitSrtDaoSql);
+		}
+		else
+		{
+			System.out.println("test2");
 		traitement.execut(request,response,traduitSrtDaoSql);
 		traduitSrtDaoFileOut.write(traduitSrtDaoSql.read());
+		}
 		request.setAttribute("FileNameDestination", FileNameDestination);
 			
 		doGet(request,response);

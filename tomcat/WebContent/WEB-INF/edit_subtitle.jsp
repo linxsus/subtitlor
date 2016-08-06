@@ -29,13 +29,13 @@
 </head>
 <body>
  <div class="center container row">
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
    
 	 <nav class="navbar navbar-inverse navbar-fixed-top navbar-form">
 	  <div class="form-group form-inline">  
-       <input class="btn btn-info col-lg-6" type="file" accept=".srt" data-placeholder="${ FileNameSource }" name="FileNameSource" />
+       <input class="btn btn-info col-lg-6" type="file" accept=".srt"  name="FileNameSource" />
        <div class="col-lg-6"> 
-        <input class="btn btn-info" type="submit" name="charger" value="charger" />
+        <input class="btn btn-info" type="submit" name="charger" value="charger" id="charger" />
         <c:if test="${ not empty FileNameDestination }">
        		<a class="btn btn-info" href="http://localhost:8080/tomcat${ FileNameDestination }" >
     		    fichier 
@@ -47,29 +47,24 @@
 	</nav>
   
 
- 	    <table>
 	        <c:forEach items="${ subtitles }" var="line" >
-	        	<tr>
-	        		<td style="text-align:right;"><c:out value="${ line.numLigne }" />     
-	        		<td/>
-	        		 <td>
-	        		  <c:out value="${line.time }" />
-	        		  </td>
-	        		  </tr>
-	        		      <c:forEach items="${ line.original }" var="line1" varStatus="status">
-	        		       <tr>
-	        		  		<td/>
-	        		        <td>
-	        		        <c:out value="${ line1 }" />
-	        				</td>
-	        				<td><input type="text" name="paragraphe${ line.numLigne }linge${ status.index }" id="paragraphe${ line.numLigne }linge${ status.index }" value="${ line.traduit[status.index] }" size="75" /></td>
-	        				</tr>
-	        				</c:forEach>
-	        				<tr>
-	        				 <td/>
-	        				 </tr>	        	
+	        <p>
+	        	<div class="col-lg-6">
+	        	  <c:out value="${ line.numLigne }" />
+	        	</div>	     
+	        	<div class="col-lg-6">
+	        	  <c:out value="${line.time }" />
+	        	</div>
+	        	<c:forEach items="${ line.original }" var="line1" varStatus="status">
+	        	   <div class="col-lg-6">
+	        	     <c:out value="${ line1 }" />
+	        	   </div>
+	        	   <div class="col-lg-6">
+	        		 <input type="text" name="paragraphe${ line.numLigne }linge${ status.index }" id="paragraphe${ line.numLigne }linge${ status.index }" value="${ line.traduit[status.index] }" size="75" />
+	        	   </div>
+	       		</c:forEach>
+	        </p>    	
 	    	</c:forEach>
-	    </table>
    
      </form>
       </div>
