@@ -28,14 +28,13 @@
 
 </head>
 <body>
- <div class="center">
+ <div class="center container row">
     <form method="post">
-    <div class="container-fluide">
    
 	 <nav class="navbar navbar-inverse navbar-fixed-top navbar-form">
-      
-      fichier source: 
-      <input type="text" name="FileNameSource" id="FileNameSource" value="${ FileNameSource }" size="35px" />
+	  <div class="form-group form-inline">  
+       <input class="btn btn-info col-lg-6" type="file" accept=".srt" data-placeholder="${ FileNameSource }" name="FileNameSource" />
+       <div class="col-lg-6"> 
         <input class="btn btn-info" type="submit" name="charger" value="charger" />
         <c:if test="${ not empty FileNameDestination }">
        		<a class="btn btn-info" href="http://localhost:8080/tomcat${ FileNameDestination }" >
@@ -43,7 +42,8 @@
      		</a>
         </c:if>
         <input class="btn btn-info" type="submit" name="enregistrer" value="enregistrer" />
-   
+        </div>
+      </div>
 	</nav>
   
 
@@ -62,7 +62,7 @@
 	        		        <td>
 	        		        <c:out value="${ line1 }" />
 	        				</td>
-	        				<td><input type="text" name="paragraphe${ line.numLigne }linge${ status.index }" id="paragraphe${ line.numLigne }linge${ status.index }" value="${ line.traduit[status.index] }" size="35" /></td>
+	        				<td><input type="text" name="paragraphe${ line.numLigne }linge${ status.index }" id="paragraphe${ line.numLigne }linge${ status.index }" value="${ line.traduit[status.index] }" size="75" /></td>
 	        				</tr>
 	        				</c:forEach>
 	        				<tr>
@@ -70,7 +70,6 @@
 	        				 </tr>	        	
 	    	</c:forEach>
 	    </table>
-	    </div>
    
      </form>
       </div>
