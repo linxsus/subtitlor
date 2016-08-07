@@ -29,6 +29,7 @@ public class TraduitSrtTraitement {
 	public void execut(HttpServletRequest request, HttpServletResponse response, TraduitSrtDao traduitSrtDao) {
 
 		// TODO Auto-generated method stub 
+		//aller dit moi que ça marche
 
 		
 		ArrayList<TraduitSrt> traduitSrt=traduitSrtDao.read();
