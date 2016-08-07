@@ -27,7 +27,7 @@ public class TraduitSrtTraitement {
     public static final String CHEMIN_FICHIERS = "c:\\"; 
     
 	public void execut(HttpServletRequest request, HttpServletResponse response, TraduitSrtDao traduitSrtDao) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub 
 		
 		ArrayList<TraduitSrt> traduitSrt=traduitSrtDao.read();
 		for (TraduitSrt ligne:traduitSrt)
@@ -71,7 +71,7 @@ public class TraduitSrtTraitement {
 		traduitSrtDao.write(traduitSrt);
 	}
 	
-	public void chargement(HttpServletRequest request, HttpServletResponse response, TraduitSrtDao traduitSrtDao) {
+	public void chargement(HttpServletRequest request, HttpServletResponse response, TraduitSrtDao traduitSrtDao) throws IOException, ServletException {
         // On récupère le champ description comme d'habitude
 		
         String description = request.getParameter("description");
