@@ -27,7 +27,9 @@ public class TraduitSrtTraitement {
     public static final String CHEMIN_FICHIERS = "c:\\"; 
     
 	public void execut(HttpServletRequest request, HttpServletResponse response, TraduitSrtDao traduitSrtDao) {
+
 		// TODO Auto-generated method stub 
+
 		
 		ArrayList<TraduitSrt> traduitSrt=traduitSrtDao.read();
 		for (TraduitSrt ligne:traduitSrt)

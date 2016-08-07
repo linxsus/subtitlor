@@ -6,13 +6,13 @@
         background-color: #eef;
         color: #259;
 		padding-top: 70px;
-
+		margin: auto;
+		
 		text-align: center;
 		
       }
       nav img {
         width: 100%;
-      
       }
 
 	  .navbar
@@ -58,3 +58,4 @@
   display: inline-block;
   width: 100px;
 }
+ 
