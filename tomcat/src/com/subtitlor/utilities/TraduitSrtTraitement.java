@@ -24,7 +24,7 @@ import com.subtitlor.dao.TraduitSrtDao;
 public class TraduitSrtTraitement {
 	
     public static final int TAILLE_TAMPON = 10240;
-    public static final String CHEMIN_FICHIERS = "c:\\"; 
+    public static final String CHEMIN_FICHIERS = "e:/test/"; 
     
 	public void execut(HttpServletRequest request, HttpServletResponse response, TraduitSrtDao traduitSrtDao) {
 

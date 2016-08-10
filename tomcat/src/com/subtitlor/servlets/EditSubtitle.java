@@ -47,20 +47,22 @@ import com.subtitlor.utilities.TraduitSrtTraitement;
 	
 		String donnee;
 		donnee=request.getParameter("charger");
-		System.out.println(donnee);
+		
 	//si on appuis sur le bouton charger
 		if (donnee!=null && !donnee.isEmpty()) 
+			
 		{
-			System.out.println("test1");
 			traitement.chargement(request,response,traduitSrtDaoSql);
+			request.setAttribute("FileNameDestination", null);
 		}
 		else
 		{
 			System.out.println("test2");
 		traitement.execut(request,response,traduitSrtDaoSql);
 		traduitSrtDaoFileOut.write(traduitSrtDaoSql.read());
-		}
 		request.setAttribute("FileNameDestination", FileNameDestination);
+		}
+		
 			
 		doGet(request,response);
 	}
