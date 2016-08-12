@@ -38,7 +38,7 @@
         <input class="btn btn-info" type="submit" name="charger" value="charger" id="charger" />
         <c:if test="${ not empty FileNameDestination }">
        		<a class="btn btn-info" href="http://localhost:8080/tomcat${ FileNameDestination }" >
-    		    fichier 
+    		    fichier
      		</a>
         </c:if>
         <input class="btn btn-info" type="submit" name="enregistrer" value="enregistrer" />
