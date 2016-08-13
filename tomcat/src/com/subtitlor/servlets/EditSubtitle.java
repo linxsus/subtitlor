@@ -31,8 +31,8 @@ import com.subtitlor.utilities.TraduitSrtTraitement;
 		DaoFactory daoFactory=null;
 		daoFactory = DaoFactory.getInstance(context);
 		traduitSrtDaoTempo = daoFactory.getTempo();
-		traduitSrtDaoIn = daoFactory.getOut();
-		traduitSrtDaoOut = daoFactory.getIn();         
+		traduitSrtDaoIn = daoFactory.getIn();
+		traduitSrtDaoOut = daoFactory.getOut();         
        		
 		// et on le met dans la base de donnée
 		traduitSrtDaoTempo.write(traduitSrtDaoIn.read());
@@ -65,6 +65,8 @@ import com.subtitlor.utilities.TraduitSrtTraitement;
 			
 	//si on appuis sur le bouton charger
 		String donnee=request.getParameter("charger");	
+		System.out.println(donnee);
+		
 		if (donnee!=null && !donnee.isEmpty()) 
 		{ // alors 
 			//on charge le fichier 
@@ -79,7 +81,7 @@ import com.subtitlor.utilities.TraduitSrtTraitement;
 		  // on cree aussi le fichier de sortie
 		traduitSrtDaoOut.write(traduitSrtDaoTempo.read());
 		  // on active le bouton chargement
-		//request.setAttribute("FileNameDestination", FileNameDestination);
+		request.setAttribute("FileNameDestination", "toto");
 		}
 		
 		// on demande un affichage de la page 	
