@@ -1,37 +1,51 @@
 package com.subtitlor.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import javax.servlet.ServletContext;
 
-public class DaoFactorySql {
-    private String url;
-    private String username;
-    private String password;
+public class DaoFactory {
+    private String [] parametereSQL= {
+    		"jdbc:mysql://localhost:3306/subtitlor", //url
+    		"xavier",                                //login
+    		"challans"};                             //password
+    private String FileNameSource = "/password_presentation.srt"; //fichier qui est charger par default
+	private String FileNameDestination = "/sortie.srt";  //nom du fichier que l'on va uploader
+     
+    private ServletContext context;
+       
 
-    DaoFactorySql(String url, String username, String password) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    DaoFactory(ServletContext context) {
+        this.context=context;
     }
 
-    public static DaoFactorySql getInstance() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-        	System.out.println(e);        	
-        }
-        DaoFactorySql instance = new DaoFactorySql(
-                "jdbc:mysql://localhost:3306/subtitlor", "xavier", "challans");
+    public static DaoFactory getInstance(ServletContext context) {
+       
+        DaoFactory instance = new DaoFactory(context);
         return instance;
     }
-
+/*
+    // a supprimer a la fin
     public Connection getConnection() throws SQLException {
     	return DriverManager.getConnection(url, username, password);
     }
 
     // Récupération du Dao
+    // a supprimer a la fin
     public TraduitSrtDao getTraduitSrtDao() {
         return new TraduitSrtDaoMysql (this);
     }
+*/    
+    
+    public TraduitSrtDao getTempo() {
+    	return new TraduitSrtDaoMysql (parametereSQL);
+    }
+
+    public TraduitSrtDao getIn() {
+    	return new TraduitSrtDaoFile(context.getRealPath(FileNameSource));
+    }
+
+    public TraduitSrtDao getOut() {
+    	return new TraduitSrtDaoFile(context.getRealPath(FileNameDestination));
+    }
+    
+   
 }

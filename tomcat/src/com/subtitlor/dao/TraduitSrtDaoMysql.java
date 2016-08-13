@@ -7,35 +7,51 @@ package com.subtitlor.dao;
 	import java.sql.Statement;
 	import java.sql.PreparedStatement;
 	import java.util.ArrayList;
-	import java.util.List;
+
 
 import com.subtitlor.utilities.TraduitSrt;
 
 	public class TraduitSrtDaoMysql implements TraduitSrtDao {
-	    private Connection connexion;
+	    private Connection connection;
+	    private String url = "jdbc:mysql://localhost:3306/subtitlor";
+	    private String username = "xavier";
+	    private String password = "challans";
 	    
-	    TraduitSrtDaoMysql (DaoFactorySql daoFactory) {
+	    TraduitSrtDaoMysql (String [] parametere ) {
 	    
-	        try{
-	        connexion = daoFactory.getConnection();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        
+	    setParametere (parametere);	
+	    
+	    try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+        	System.out.println(e);        	
+        }
+	    
+	    try {
+			connection=DriverManager.getConnection(url, username, password);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);  
+			e.printStackTrace();
+		}	
 	    }
-	    public void add(TraduitSrt lignes) {
+	    
+	   
+		public void add(TraduitSrt lignes) {
 	        PreparedStatement preparedStatement = null;
 
 	        try {
 	                  	
-	        	preparedStatement = connexion.prepareStatement("INSERT INTO times(numLigne, time) VALUES(?, ?);");
+	        	preparedStatement = connection.prepareStatement("INSERT INTO times(numLigne, time) VALUES(?, ?);");
 	            preparedStatement.setInt(1, lignes.getNumLigne());
 	            preparedStatement.setString(2, lignes.getTime());
 	            preparedStatement.executeUpdate();
 	            
+	                  
+	            
 	            for (String ligne:lignes.getOriginal())
 	            {
-	            	preparedStatement = connexion.prepareStatement("INSERT INTO original (numLigne, text) VALUES(?, ?);");
+	            	preparedStatement = connection.prepareStatement("INSERT INTO original (numLigne, text) VALUES(?, ?);");
 	            	preparedStatement.setInt(1, lignes.getNumLigne());
 	            	preparedStatement.setString(2, ligne);
 	            	preparedStatement.executeUpdate();
@@ -45,7 +61,7 @@ import com.subtitlor.utilities.TraduitSrt;
 	            {
 	            	if (!ligne.isEmpty())
 	            	{	
-	            	preparedStatement = connexion.prepareStatement("INSERT INTO traduit(numLigne, text) VALUES(?, ?);");
+	            	preparedStatement = connection.prepareStatement("INSERT INTO traduit(numLigne, text) VALUES(?, ?);");
 	            	preparedStatement.setInt(1, lignes.getNumLigne());
 	            	preparedStatement.setString(2, ligne);
 	            	preparedStatement.executeUpdate();
@@ -66,13 +82,13 @@ import com.subtitlor.utilities.TraduitSrt;
 		public void write(ArrayList<TraduitSrt> lignes) {
 	    	PreparedStatement preparedStatement = null;
 	    	 try {
-	    	preparedStatement = connexion.prepareStatement("delete from times;");
+	    	preparedStatement = connection.prepareStatement("delete from times;");
         	preparedStatement.executeUpdate();
             
-        	preparedStatement = connexion.prepareStatement("delete from original;");
+        	preparedStatement = connection.prepareStatement("delete from original;");
         	preparedStatement.executeUpdate();
             
-        	preparedStatement = connexion.prepareStatement("delete from traduit;");
+        	preparedStatement = connection.prepareStatement("delete from traduit;");
         	preparedStatement.executeUpdate();
 	    	 }
 	    	 catch (Exception e){
@@ -95,7 +111,7 @@ import com.subtitlor.utilities.TraduitSrt;
 	        ResultSet resultatRequette = null;
 	        
 	        try {
-	            statement = connexion.createStatement();
+	            statement = connection.createStatement();
 
 	            // Ex�cution de la requ�te
 	            resultatRequette = statement.executeQuery("SELECT numLigne, time FROM times;");
@@ -121,5 +137,18 @@ import com.subtitlor.utilities.TraduitSrt;
 	        } catch (SQLException e) {
 	        } 
 			return resultat;
+		}
+		
+		@Override
+		public void setParametere(String[] Name) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		@Override
+		public String[] getParametere() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}

@@ -3,9 +3,7 @@ package com.subtitlor.dao;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -13,9 +11,6 @@ import java.util.ArrayList;
 
 import com.subtitlor.dao.TraduitSrtDao;
 import com.subtitlor.utilities.TraduitSrt;
-
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 
 public class TraduitSrtDaoFile implements TraduitSrtDao {
 	
@@ -134,6 +129,19 @@ public class TraduitSrtDaoFile implements TraduitSrtDao {
 	public ArrayList<TraduitSrt> read() {
 
 		return traduitSrts;
+	}
+
+	@Override
+	public void setParametere(String[] Name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public String[] getParametere() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
