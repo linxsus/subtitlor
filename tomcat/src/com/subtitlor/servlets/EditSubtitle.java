@@ -69,6 +69,8 @@ public class EditSubtitle extends HttpServlet {
 
 		if (donnee != null && !donnee.isEmpty()) { // alors
 			String[] nomFichier=new String[1];										// on charge le fichier
+			
+			//TODO attention au ./ c'est pas propre.....
 			nomFichier[0]="./"+traitement.chargement(request, response, traduitSrtDaoTempo);
 			
 			traduitSrtDaoIn.setParameter(nomFichier);

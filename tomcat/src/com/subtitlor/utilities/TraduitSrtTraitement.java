@@ -2,7 +2,11 @@ package com.subtitlor.utilities;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -10,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -103,19 +108,36 @@ public class TraduitSrtTraitement {
     }
 
     private void ecrireFichier( Part part, String nomFichier, String chemin ) throws IOException {
-        BufferedInputStream entree = null;
-        BufferedOutputStream sortie = null;
+        //BufferedInputStream entree = null;
+        //BufferedOutputStream sortie = null;
+        BufferedWriter sortie=null;
+        BufferedReader entree=null;
+		
+        
         try 
         {
-            entree = new BufferedInputStream(part.getInputStream(), TAILLE_TAMPON);
-            sortie = new BufferedOutputStream(new FileOutputStream(new File(chemin + nomFichier)), TAILLE_TAMPON);
-
-            byte[] tampon = new byte[TAILLE_TAMPON];
-            int longueur;
+            //entree = new BufferedInputStream(part.getInputStream(), TAILLE_TAMPON);
+            //sortie = new BufferedOutputStream(new FileOutputStream(new File(chemin + nomFichier)), TAILLE_TAMPON);
+        	entree = new BufferedReader(new InputStreamReader(part.getInputStream(), "UTF-8"));
+            
+            sortie = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(chemin + nomFichier), "UTF-8"));
+            String line;
+            
+/*
             while ((longueur = entree.read(tampon)) > 0) 
             {
                 sortie.write(tampon, 0, longueur);
             }
+*/
+            while ((line = entree.readLine()) != null) {
+            	String chaine = String.valueOf(line); //
+				// si ce n'est pas une chaine vide on l'ecrit
+            	System.out.println(line);
+				if (chaine != null) {
+					sortie.write(chaine);
+					sortie.newLine();
+				}
+			}
             System.out.println("ok dans l'ecriture du fichier chargement "+chemin+" / "+ nomFichier);
         } 
         catch (Exception e)

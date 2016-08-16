@@ -98,6 +98,10 @@ public class TraduitSrtDaoFile implements TraduitSrtDao {
 		boolean newTime=false; // la prochaine ligne de textbrut n'est pas le temps d'une page 
 		for (String line:textBrute) //pour chaque ligne du fichier
 		{
+			
+			if (!line.equals("") && Character.isIdentifierIgnorable(line.charAt(0)) ) {
+				  line = line.substring(1);
+				}
 			System.out.println(line);
 			if (newSubtitle) // si on est sur une nouvelle page
 			{
@@ -119,13 +123,14 @@ public class TraduitSrtDaoFile implements TraduitSrtDao {
 				{
 					System.out.println("erreur dans le decodage du fichier "+fileName);
 					System.out.println(e);
+					/*
 					index=0;
 					result.add(index,new TraduitSrtPage());
 					result.get(index).setNumLigne(index+1);
 					
 					newSubtitle=false; // la prochaine ligne de textbrut n'est pas une page 
 					newTime=true; // la prochaine ligne de textbrut est le temps d'une page
-					System.out.println(line);
+					System.out.println(line);*/
 				}
 			}
 			else
