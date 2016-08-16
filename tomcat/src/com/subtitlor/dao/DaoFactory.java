@@ -7,10 +7,13 @@ public class DaoFactory {
     		"jdbc:mysql://localhost:3306/subtitlor", //url
     		"xavier",                                //login
     		"challans"};                             //password
-    private String FileNameSource = "/password_presentation.srt"; //fichier qui est charger par default
-	private String FileNameDestination = "/sortie.srt";  //nom du fichier que l'on va uploader
-     
-    private ServletContext context;
+    private String[] FileNameSource = {
+    		"/password_presentation.srt", //fichier qui est charger par default
+            ""};                          //chemin du fichier ne pas modifier ici car on prend par default le chemin du context
+	private String[] FileNameDestination ={
+			"/sortie.srt",                //nom du fichier que l'on va uploader
+            ""};                          //chemin du fichier ne pas modifier ici car on prend par default le chemin du context     
+
        
 /**
  * constructeur de la class
@@ -20,7 +23,8 @@ public class DaoFactory {
  */
     
     DaoFactory(ServletContext context) {
-        this.context=context;
+        FileNameSource[1]=context.getRealPath(""); //on initialise le chemin par default
+        FileNameDestination[1]=context.getRealPath(""); //on initialise le chemin par default
     }
 
     /**
@@ -61,7 +65,7 @@ public class DaoFactory {
      */
     
     public TraduitSrtDao getIn() {
-    	return new TraduitSrtDaoFile(context.getRealPath(FileNameSource));
+    	return new TraduitSrtDaoFile(FileNameSource);
     }
 
     
@@ -74,7 +78,7 @@ public class DaoFactory {
      */
     
     public TraduitSrtDao getOut() {
-    	return new TraduitSrtDaoFile(context.getRealPath(FileNameDestination));
+    	return new TraduitSrtDaoFile(FileNameDestination);
     }
     
    

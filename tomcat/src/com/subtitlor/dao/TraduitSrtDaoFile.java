@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import com.subtitlor.dao.TraduitSrtDao;
@@ -17,10 +16,12 @@ import com.subtitlor.utilities.TraduitSrtPage;
  * @author xavier
  *
  */
-public class TraduitSrtDaoFile implements TraduitSrtDao {
+public class TraduitSrtDaoFile implements TraduitSrtDao 
+{
 	
 	private ArrayList<TraduitSrtPage> traduitSrtPages=null;
 	private String fileName;
+	private String chemin;
 
 	
 	/**
@@ -28,27 +29,15 @@ public class TraduitSrtDaoFile implements TraduitSrtDao {
 	 * 
 	 * @param parameter (string[])
 	 * structure de 
- *    String [1] parameter = {
- *                 fileName};
+     *    String [1] parameter = {
+     *                 fileName,
+     *                 chemin};
 	 *  nom du chemin complet du fichier
 	 *
 	 */
 	
-	public TraduitSrtDaoFile(String[] parameter) {
-		setParameter(parameter);
-	}
-	
-	
-	
-	/**
-	 * constructeur de la class
-	 * 
-	 * @param fileName (string)
-	 *  nom du chemin complet du fichier
-	 *
-	 */
-	public TraduitSrtDaoFile(String fileName) {
-		String [] parameter={fileName};
+	public TraduitSrtDaoFile(String[] parameter)
+	{
 		setParameter(parameter);
 	}
 	
@@ -58,27 +47,45 @@ public class TraduitSrtDaoFile implements TraduitSrtDao {
 	 * ouverture du fichier et décodage 
 	 */
 	
-	private void init(){
+	private void init()
+	{
 		ArrayList<String>  textBrute = new ArrayList<String>();
-		BufferedReader br;
+		BufferedReader br=null;
 		
 		
-		try {
+		try
+		{
 			//ouverture du fichier
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(chemin+fileName), "UTF-8"));
 			String line;
 			// TODO
 			// enregistrement du fichier brute en mémoire pour accélérer les traitements.
 			// il y a surement plus propre.
-			while ((line = br.readLine()) != null) {
+			while ((line = br.readLine()) != null)
+			{
 				textBrute.add(line);
 			}
-			//fermeture du fichier
-			br.close();
-		} catch (IOException e) {
-			System.out.println("erreur lors de l'ouverture du fichier "+ fileName);
+		} 
+		catch (IOException e) 
+		{
+			System.out.println("erreur lors de l'ouverture du fichier "+ chemin+fileName);
     		System.out.println(e);
 		}
+		finally
+		{
+			try 
+			{
+				//fermeture du fichier
+				br.close();
+			}
+			catch (IOException e) 
+			{
+				System.out.println("erreur dans la fermeture du fichier "+chemin+fileName);
+				System.out.println(e);
+			}
+		}
+		
+		
 		// décodage du fichier pour le mettre dans la structure traduitSrts 
 		traduitSrtPages=decodage(textBrute);	
 	}
@@ -98,11 +105,11 @@ public class TraduitSrtDaoFile implements TraduitSrtDao {
 		boolean newTime=false; // la prochaine ligne de textbrut n'est pas le temps d'une page 
 		for (String line:textBrute) //pour chaque ligne du fichier
 		{
-			
-			if (!line.equals("") && Character.isIdentifierIgnorable(line.charAt(0)) ) {
+			// corrige un bug si le 1er caractère est le caractère pour dire que c'est de l'UTF8  
+			if (!line.equals("") && Character.isIdentifierIgnorable(line.charAt(0)) )
+			{
 				  line = line.substring(1);
-				}
-			System.out.println(line);
+			}
 			if (newSubtitle) // si on est sur une nouvelle page
 			{
 				try
@@ -123,14 +130,6 @@ public class TraduitSrtDaoFile implements TraduitSrtDao {
 				{
 					System.out.println("erreur dans le decodage du fichier "+fileName);
 					System.out.println(e);
-					/*
-					index=0;
-					result.add(index,new TraduitSrtPage());
-					result.get(index).setNumLigne(index+1);
-					
-					newSubtitle=false; // la prochaine ligne de textbrut n'est pas une page 
-					newTime=true; // la prochaine ligne de textbrut est le temps d'une page
-					System.out.println(line);*/
 				}
 			}
 			else
@@ -162,11 +161,12 @@ public class TraduitSrtDaoFile implements TraduitSrtDao {
 	@Override
 	public void write(ArrayList<TraduitSrtPage> pages) 
 	{
+		BufferedWriter bW=null;
 		try
 		{
 			// ouverture du fichier en écriture
-			BufferedWriter bW;
-			bW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"));
+			
+			bW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(chemin+fileName), "UTF-8"));
 
 			
 			for (String tmp:textbrute(pages)) // on transform toutes les pages en textbrute et pour chaque ligne 
@@ -174,18 +174,30 @@ public class TraduitSrtDaoFile implements TraduitSrtDao {
 				// TODO a voir l'utiliter de cette ligne
 				String chaine = String.valueOf(tmp); //
 				// si ce n'est pas une chaine vide on l'ecrit
-				if (chaine != null) {
+				if (chaine != null)
+				{
 					bW.write(chaine);
 					bW.newLine();
 				}
 			}
-			//fermeture du fichier
-			bW.close();
 		}
 		catch (Exception e)
 		{
-			System.out.println("erreur dans l'ecriture du fichier "+fileName);
+			System.out.println("erreur dans l'ecriture du fichier "+chemin+fileName);
 			System.out.println(e);
+		}
+		finally
+		{
+			try
+			{
+				//fermeture du fichier
+				bW.close();
+			} 
+			catch (IOException e)
+			{
+				System.out.println("erreur dans la fermeture du fichier "+chemin+fileName);
+				System.out.println(e);
+			}
 		}
 		
 	}
@@ -218,27 +230,33 @@ public class TraduitSrtDaoFile implements TraduitSrtDao {
 	}
 
 	@Override
-	public ArrayList<TraduitSrtPage> read() {
-
+	public ArrayList<TraduitSrtPage> read() 
+	{
 		return traduitSrtPages;
 	}
 
 	@Override
-	public void setParameter(String[] parameter) {
+	public void setParameter(String[] parameter)
+	{
 		// TODO il faut faire une verification des parameter
 		
 		//si le nom du fichier a changer on refait une initialisation 
-		if (fileName!=parameter[0]) 
+		switch (parameter.length)
 		{
-			fileName=parameter[0];
-			init();
-		}
+		  case 2 :chemin=parameter[1];
+		  case 1 :fileName=parameter[0];
+		  break;
+		// TODO une gestion plus pousser de l'erreur serait un plus
+		  default: System.out.println("erreur dans le nombre d'argument passer a setParameter de TraduitSrtDaoFile");
+		};
+		init();
 	}
 
 
 	@Override
-	public String[] getParameter() {
-		String[] parameter={fileName};
+	public String[] getParameter()
+	{
+		String[] parameter={fileName,chemin};
 		return parameter;
 	}
 	

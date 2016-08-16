@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.subtitlor.dao.DaoFactory;
 import com.subtitlor.dao.TraduitSrtDao;
+import com.subtitlor.utilities.TraduitSrtImportFichier;
 import com.subtitlor.utilities.TraduitSrtTraitement;
 
 @WebServlet("/EditSubtitle")
@@ -22,6 +23,7 @@ public class EditSubtitle extends HttpServlet {
 	private TraduitSrtDao traduitSrtDaoIn;
 	private TraduitSrtDao traduitSrtDaoOut;
 	private TraduitSrtTraitement traitement;
+	private TraduitSrtImportFichier chargement;
 
 	// initialisation des variables au démarrage du servlet.
 
@@ -40,6 +42,7 @@ public class EditSubtitle extends HttpServlet {
 
 		// on crée une instance traitement
 		traitement = new TraduitSrtTraitement();
+		chargement = new TraduitSrtImportFichier(); 
 
 	}
 
@@ -65,25 +68,22 @@ public class EditSubtitle extends HttpServlet {
 
 		// si on appuis sur le bouton charger
 		String donnee = request.getParameter("charger");
-		System.out.println(donnee);
 
 		if (donnee != null && !donnee.isEmpty()) { // alors
-			String[] nomFichier=new String[1];										// on charge le fichier
 			
-			//TODO attention au ./ c'est pas propre.....
-			nomFichier[0]="./"+traitement.chargement(request, response, traduitSrtDaoTempo);
-			
-			traduitSrtDaoIn.setParameter(nomFichier);
+			// on récupère le fichier dans traduitSrtDaoIn
+			chargement.chargement(request, response, traduitSrtDaoIn);
+			// et on le met dans la base de donnée
 			traduitSrtDaoTempo.write(traduitSrtDaoIn.read());
 			// on désactive le bouton chargement
 			request.setAttribute("FileNameDestination", "");
 		} else { // sinon
 					// on enregistre les modifs dans la base temporaire
 			traitement.execut(request, response, traduitSrtDaoTempo);
-			// on cree aussi le fichier de sortie
+			// on crée aussi le fichier de sortie
 			traduitSrtDaoOut.write(traduitSrtDaoTempo.read());
 			// on active le bouton chargement
-			request.setAttribute("FileNameDestination", "toto");
+			request.setAttribute("FileNameDestination", traduitSrtDaoOut.getParameter()[0]);// !!!attention car on ne prend que le nom du fichier on estime que le chemin est bien celui fournis par le context 
 		}
 
 		// on demande un affichage de la page
