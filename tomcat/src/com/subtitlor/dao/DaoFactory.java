@@ -12,37 +12,67 @@ public class DaoFactory {
      
     private ServletContext context;
        
-
+/**
+ * constructeur de la class
+ * 
+ * @param ServletContext context
+ *  Récupère le context du servlet
+ */
+    
     DaoFactory(ServletContext context) {
         this.context=context;
     }
 
+    /**
+     * permet de crée une instance 
+     * @param context
+     * @return
+     *
+     * Récupère le context du servlet
+     *
+     * retourne une instance de la class
+     */
+    
     public static DaoFactory getInstance(ServletContext context) {
        
         DaoFactory instance = new DaoFactory(context);
         return instance;
     }
-/*
-    // a supprimer a la fin
-    public Connection getConnection() throws SQLException {
-    	return DriverManager.getConnection(url, username, password);
-    }
-
-    // Récupération du Dao
-    // a supprimer a la fin
-    public TraduitSrtDao getTraduitSrtDao() {
-        return new TraduitSrtDaoMysql (this);
-    }
-*/    
+    
+    /**
+     * crée une instance de la base temporaire 
+     * 
+     * @return TraduitSrtDao
+     * 
+     * retourne un object de type TraduitSrtDao 
+     */
     
     public TraduitSrtDao getTempo() {
     	return new TraduitSrtDaoMysql (parametereSQL);
     }
 
+    
+    /**
+     * crée une instance pour la source
+     * 
+     * @return TraduitSrtDao
+     * 
+     * retourne un object de type TraduitSrtDao 
+     */
+    
     public TraduitSrtDao getIn() {
     	return new TraduitSrtDaoFile(context.getRealPath(FileNameSource));
     }
 
+    
+    /**
+     * crée une instance pour la destination 
+     * 
+     * @return TraduitSrtDao
+     * 
+     * retourne un object de type TraduitSrtDao 
+     */
+    
     public TraduitSrtDao getOut() {
     	return new TraduitSrtDaoFile(context.getRealPath(FileNameDestination));
     }

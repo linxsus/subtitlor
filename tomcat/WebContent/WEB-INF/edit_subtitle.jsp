@@ -29,7 +29,7 @@
 </head>
 <body>
  <div class="center container row">
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" >
    
 	 <nav class="navbar navbar-inverse navbar-fixed-top navbar-form">
 	  <div class="form-group form-inline">  

@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * @author xavier
  *
  */
-public class TraduitSrt {
+public class TraduitSrtPage {
 
 	public int getNumLigne() {
 		return numLigne;
@@ -43,7 +43,7 @@ public class TraduitSrt {
 	private ArrayList<String> original;
 	private ArrayList<String> traduit;
 	
-    public TraduitSrt()
+    public TraduitSrtPage()
 	{
 		original=new ArrayList<String>();
 		traduit=new ArrayList<String>();

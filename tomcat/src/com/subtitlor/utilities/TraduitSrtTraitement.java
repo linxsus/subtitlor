@@ -24,15 +24,13 @@ import com.subtitlor.dao.TraduitSrtDao;
 public class TraduitSrtTraitement {
 	
     public static final int TAILLE_TAMPON = 10240;
-    public static final String CHEMIN_FICHIERS = "e:/test/"; 
+    public static final String CHEMIN_FICHIERS = "./"; 
     
 	public void execut(HttpServletRequest request, HttpServletResponse response, TraduitSrtDao traduitSrtDao) {
 
-		// TODO Auto-generated method stub 
-      
 		
-		ArrayList<TraduitSrt> traduitSrt=traduitSrtDao.read();
-		for (TraduitSrt ligne:traduitSrt)
+		ArrayList<TraduitSrtPage> traduitSrt=traduitSrtDao.read();
+		for (TraduitSrtPage ligne:traduitSrt)
 		{
 			ArrayList<String> tempo=new ArrayList<String>();
 			// hoo que c'est laid ce codage !!!!
@@ -73,7 +71,7 @@ public class TraduitSrtTraitement {
 		traduitSrtDao.write(traduitSrt);
 	}
 	
-	public void chargement(HttpServletRequest request, HttpServletResponse response, TraduitSrtDao traduitSrtDao) throws IOException, ServletException {
+	public String chargement(HttpServletRequest request, HttpServletResponse response, TraduitSrtDao traduitSrtDao) throws IOException, ServletException {
         // On récupère le champ description comme d'habitude
 		
         String description = request.getParameter("description");
@@ -84,7 +82,9 @@ public class TraduitSrtTraitement {
             
         // On vérifie qu'on a bien reçu un fichier
         String nomFichier = getNomFichier(part);
+        
         System.out.println(nomFichier);
+        
         // Si on a bien un fichier
         if (nomFichier != null && !nomFichier.isEmpty()) {
             String nomChamp = part.getName();
@@ -99,29 +99,52 @@ public class TraduitSrtTraitement {
         }
 
         //this.getServletContext().getRequestDispatcher("/WEB-INF/bonjour.jsp").forward(request, response);
+      return nomFichier;  
     }
 
     private void ecrireFichier( Part part, String nomFichier, String chemin ) throws IOException {
         BufferedInputStream entree = null;
         BufferedOutputStream sortie = null;
-        try {
+        try 
+        {
             entree = new BufferedInputStream(part.getInputStream(), TAILLE_TAMPON);
             sortie = new BufferedOutputStream(new FileOutputStream(new File(chemin + nomFichier)), TAILLE_TAMPON);
 
             byte[] tampon = new byte[TAILLE_TAMPON];
             int longueur;
-            while ((longueur = entree.read(tampon)) > 0) {
+            while ((longueur = entree.read(tampon)) > 0) 
+            {
                 sortie.write(tampon, 0, longueur);
             }
-        } finally {
+            System.out.println("ok dans l'ecriture du fichier chargement "+chemin+" / "+ nomFichier);
+        } 
+        catch (Exception e)
+		{
+			System.out.println("erreur dans l'ecriture du fichier chargement "+chemin+" / "+ nomFichier);
+			System.out.println(e);
+		}
+        
+        finally {
             try {
                 sortie.close();
             } catch (IOException ignore) {
+            	System.out.println("erreur dans l'ignore du fichier chargement "+chemin+" / "+ nomFichier);
             }
+            catch (Exception e)
+    		{
+    			System.out.println("erreur dans l'ecriture du fichier chargement "+chemin+" / "+ nomFichier);
+    			System.out.println(e);
+    		}
             try {
                 entree.close();
             } catch (IOException ignore) {
+            	System.out.println("erreur dans l'ignore du fichier chargement "+chemin+" / "+ nomFichier);
             }
+            catch (Exception e)
+    		{
+    			System.out.println("erreur dans l'ecriture du fichier chargement "+chemin+" / "+ nomFichier);
+    			System.out.println(e);
+    		}
         }
     }
     
