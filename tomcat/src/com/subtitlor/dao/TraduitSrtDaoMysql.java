@@ -34,10 +34,10 @@ import com.subtitlor.utilities.TraduitSrtPage;
 	
 	public class TraduitSrtDaoMysql implements TraduitSrtDao {
 	 
-		// * variable initialiser a la creation de l'object par parameter[3]
-	    private String url;
-	    private String username;
-	    private String password;
+		// * variable initialiser a la creation de l'object par parameter[3] 
+	    private String url="";
+	    private String username="";
+	    private String password="";
 	    // *
 	    
 	    private Connection connection; // connexion a la base
@@ -90,7 +90,7 @@ import com.subtitlor.utilities.TraduitSrtPage;
 	    		
 	    		// Insertion dans la base de la période (time) d'affichage
 	    		preparedStatement = connection.prepareStatement("INSERT INTO times(numLigne, time) VALUES(?, ?);");
-	    		preparedStatement.setInt(1, page.getNumLigne());
+	    		preparedStatement.setInt(1, page.getNumPage());
 	    		preparedStatement.setString(2, page.getTime());
 	    		preparedStatement.executeUpdate();
 
@@ -99,7 +99,7 @@ import com.subtitlor.utilities.TraduitSrtPage;
 	    		for (String ligne:page.getOriginal())
 	    		{
 	    			preparedStatement = connection.prepareStatement("INSERT INTO original (numLigne, text) VALUES(?, ?);");
-	    			preparedStatement.setInt(1, page.getNumLigne());
+	    			preparedStatement.setInt(1, page.getNumPage());
 	    			preparedStatement.setString(2, ligne);
 	    			preparedStatement.executeUpdate();
 	    		}
@@ -110,7 +110,7 @@ import com.subtitlor.utilities.TraduitSrtPage;
 	    			if (!ligne.isEmpty())
 	    			{	
 	    				preparedStatement = connection.prepareStatement("INSERT INTO traduit(numLigne, text) VALUES(?, ?);");
-	    				preparedStatement.setInt(1, page.getNumLigne());
+	    				preparedStatement.setInt(1, page.getNumPage());
 	    				preparedStatement.setString(2, ligne);
 	    				preparedStatement.executeUpdate();
 	    			}
@@ -175,7 +175,7 @@ import com.subtitlor.utilities.TraduitSrtPage;
 	    			int numLigne = resultatRequette.getInt("numLigne")-1;
 	    			String time = resultatRequette.getString("time");
 	    			resultat.add(numLigne,new TraduitSrtPage());
-	    			resultat.get(numLigne).setNumLigne(numLigne+1);
+	    			resultat.get(numLigne).setNumPage(numLigne+1);
 	    			resultat.get(numLigne).setTime(time);
 	    		}
 	    		// récupère pour chaque page le text original
@@ -202,11 +202,15 @@ import com.subtitlor.utilities.TraduitSrtPage;
 
 	    @Override
 	    public void setParameter(String[] parameter) {
-	    	// TODO Auto-generated method stub
-	    	// il manque des verification du format des parametres
-	    	url = parameter[0];
-	    	username =  parameter[1];
-	    	password =  parameter[2];
+	    	switch (parameter.length)
+			{
+	    	  case 3 :password =  parameter[2];
+			  case 2 :username =  parameter[1];
+			  case 1 :url = parameter[0];
+			  break;
+			// TODO une gestion plus pousser de l'erreur serait un plus
+			  default: System.out.println("erreur dans le nombre d'argument passer a setParameter de TraduitSrtDaoMysql");
+			};
 
 	    }
 

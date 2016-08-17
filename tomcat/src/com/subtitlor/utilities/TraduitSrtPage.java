@@ -7,12 +7,23 @@ import java.util.ArrayList;
  *
  */
 public class TraduitSrtPage {
-
-	public int getNumLigne() {
-		return numLigne;
+	private int numPage;
+	private String time;
+	private ArrayList<String> original;
+	private ArrayList<String> traduit;
+	
+    public TraduitSrtPage()
+	{
+		original=new ArrayList<String>();
+		traduit=new ArrayList<String>();
+		time="";
 	}
-	public void setNumLigne(int numLigne) {
-		this.numLigne = numLigne;
+
+	public int getNumPage() {
+		return numPage;
+	}
+	public void setNumPage(int numPage) {
+		this.numPage = numPage;
 	}
 	public ArrayList<String> getOriginal() {
 		return original;
@@ -38,16 +49,6 @@ public class TraduitSrtPage {
 	public void setTraduit(ArrayList<String> traduit) {
 		this.traduit = traduit;
 	}
-	private int numLigne;
-	private String time;
-	private ArrayList<String> original;
-	private ArrayList<String> traduit;
 	
-    public TraduitSrtPage()
-	{
-		original=new ArrayList<String>();
-		traduit=new ArrayList<String>();
-		time="";
-	}
 	
 }

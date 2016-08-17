@@ -7,11 +7,13 @@ public class DaoFactory {
     		"jdbc:mysql://localhost:3306/subtitlor", //url
     		"xavier",                                //login
     		"challans"};                             //password
+    
     private String[] FileNameSource = {
-    		"/password_presentation.srt", //fichier qui est charger par default
+    		"\\password_presentation.srt", //fichier qui est charger par default
             ""};                          //chemin du fichier ne pas modifier ici car on prend par default le chemin du context
+    
 	private String[] FileNameDestination ={
-			"/sortie.srt",                //nom du fichier que l'on va uploader
+			"\\sortie.srt",                //nom du fichier que l'on va downloader
             ""};                          //chemin du fichier ne pas modifier ici car on prend par default le chemin du context     
 
        
@@ -23,18 +25,17 @@ public class DaoFactory {
  */
     
     DaoFactory(ServletContext context) {
-        FileNameSource[1]=context.getRealPath(""); //on initialise le chemin par default
-        FileNameDestination[1]=context.getRealPath(""); //on initialise le chemin par default
+        FileNameSource[1]=context.getRealPath("/Srt"); //on initialise le chemin par default 
+        FileNameDestination[1]=context.getRealPath("/Srt"); //on initialise le chemin par default !! attention si on modifie le chemin il faut bien modifier edit_subtitle.jsp
     }
 
     /**
      * permet de crée une instance 
      * @param context
-     * @return
-     *
      * Récupère le context du servlet
-     *
+     * @return
      * retourne une instance de la class
+     * 
      */
     
     public static DaoFactory getInstance(ServletContext context) {
@@ -43,11 +44,11 @@ public class DaoFactory {
         return instance;
     }
     
+    
     /**
      * crée une instance de la base temporaire 
      * 
      * @return TraduitSrtDao
-     * 
      * retourne un object de type TraduitSrtDao 
      */
     

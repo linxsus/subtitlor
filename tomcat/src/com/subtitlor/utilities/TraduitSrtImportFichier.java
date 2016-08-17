@@ -5,7 +5,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
@@ -17,17 +16,28 @@ public class TraduitSrtImportFichier
 {
 	public static final int TAILLE_TAMPON = 10240;
     
-    public void chargement(HttpServletRequest request, HttpServletResponse response, TraduitSrtDao traduitSrtIn) 
+    /**
+     * Récupère le fichier dans la requête 
+     * on l'ecrit sur le disque dur
+     * et on l'ecrit dans traduitSrtIn
+     * 
+     * !! attention lors de l'execution on modifie traduitSrtIn
+     *  
+     * @param request
+     * @param response
+     * @param traduitSrtIn
+     */
+	
+    public static void chargement(HttpServletRequest request, HttpServletResponse response, TraduitSrtDao traduitSrtIn) 
     {
         // On récupère le champ du fichier
         Part part=null;
 		try {
 			part = request.getPart("FileNameSource");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (Exception e) 
+		{
+			System.out.println("erreur dans la lecture part ");
 			e.printStackTrace();
 		}
             
@@ -49,18 +59,22 @@ public class TraduitSrtImportFichier
             
             // on charge le fichier dans traduitSrtIn
             String[] parameter={nomFichier,chemin};
-            traduitSrtIn.setParameter(parameter);      
+            traduitSrtIn.setParameter(parameter);
+            
+            // on se remet sur la pagination 1
+            //request.setAttribute("pagination","1"); // cela ne fonctionne pas il faudrait trouver une autre façon
         }    
         
     }
 
-    private void ecrireFichier( Part part, String nomFichier, String chemin ) {
+    private static void ecrireFichier( Part part, String nomFichier, String chemin ) {
         BufferedInputStream entree = null;
         BufferedOutputStream sortie = null;
  
         try 
         {
-            entree = new BufferedInputStream(part.getInputStream(), TAILLE_TAMPON);
+            // copy du fichier temporaire vers le fichier définitif
+        	entree = new BufferedInputStream(part.getInputStream(), TAILLE_TAMPON);
             sortie = new BufferedOutputStream(new FileOutputStream(new File(chemin + nomFichier)), TAILLE_TAMPON);
 
             byte[] tampon = new byte[TAILLE_TAMPON];
@@ -71,9 +85,10 @@ public class TraduitSrtImportFichier
                 sortie.write(tampon, 0, longueur);
             }
         } 
+        // 'gestion' des erreur 
         catch (Exception e)
 		{
-			System.out.println("erreur dans l'ecriture du fichier chargement "+chemin+" / "+ nomFichier);
+			System.out.println("erreur dans l'ecriture du fichier chargement "+chemin+"\\"+ nomFichier);
 			System.out.println(e);
 		}
         
@@ -83,12 +98,12 @@ public class TraduitSrtImportFichier
             {
                 sortie.close();
             } catch (IOException ignore) {
-            	System.out.println("erreur dans l'ignore du fichier sotie "+chemin+" / "+ nomFichier);
+            	System.out.println("erreur dans l'ignore du fichier sotie "+chemin+"\\"+ nomFichier);
             	System.out.println(ignore);
             }
             catch (Exception e)
     		{
-    			System.out.println("erreur dans l'ecriture du fichier chargement "+chemin+" / "+ nomFichier);
+    			System.out.println("erreur dans l'ecriture du fichier chargement "+chemin+"\\"+ nomFichier);
     			System.out.println(e);
     		}
             
@@ -96,20 +111,24 @@ public class TraduitSrtImportFichier
             {
                 entree.close();
             } 
-            catch (IOException ignore) 
+            catch (Exception e) 
             {
-            	System.out.println("erreur dans l'ignore du fichier entree "+chemin+" / "+ nomFichier);
-            	System.out.println(ignore);
+            	System.out.println("erreur dans l'ignore du fichier entree "+chemin+"\\"+ nomFichier);
+            	System.out.println(e);
             }
-            catch (Exception e)
-    		{
-    			System.out.println("erreur dans l'ecriture du fichier chargement "+chemin+" / "+ nomFichier);
-    			System.out.println(e);
-    		}
         }
     }
     
-    private static String getNomFichier( Part part ) {
+    
+   
+    /**
+     * recuperation du nom de fichier.
+     * 
+     * !! bout de code récupérer ne pas toucher sans un minimum de compréhension 
+     * @param part
+     * @return
+     */
+    public static String getNomFichier( Part part ) {
         for ( String contentDisposition : part.getHeader( "content-disposition" ).split( ";" ) ) {
             if ( contentDisposition.trim().startsWith( "filename" ) ) {
                 return contentDisposition.substring( contentDisposition.indexOf( '=' ) + 1 ).trim().replace( "\"", "" );

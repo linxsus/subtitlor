@@ -1,6 +1,8 @@
 package com.subtitlor.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -12,24 +14,25 @@ import javax.servlet.http.HttpServletResponse;
 import com.subtitlor.dao.DaoFactory;
 import com.subtitlor.dao.TraduitSrtDao;
 import com.subtitlor.utilities.TraduitSrtImportFichier;
+import com.subtitlor.utilities.TraduitSrtPage;
+import com.subtitlor.utilities.TraduitSrtPagination;
 import com.subtitlor.utilities.TraduitSrtTraitement;
 
 @WebServlet("/EditSubtitle")
 @MultipartConfig()
 public class EditSubtitle extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 
+	private static final long serialVersionUID = 1L;
 	private TraduitSrtDao traduitSrtDaoTempo;
 	private TraduitSrtDao traduitSrtDaoIn;
 	private TraduitSrtDao traduitSrtDaoOut;
-	private TraduitSrtTraitement traitement;
-	private TraduitSrtImportFichier chargement;
+	private boolean fichier;
 
 	// initialisation des variables au démarrage du servlet.
 
 	public void init() throws ServletException {
 
-		// on récupéré une instance sql par le dao factory.
+		// on récupéré les instance par le dao factory.
 		ServletContext context = getServletContext();
 		DaoFactory daoFactory = null;
 		daoFactory = DaoFactory.getInstance(context);
@@ -37,12 +40,10 @@ public class EditSubtitle extends HttpServlet {
 		traduitSrtDaoIn = daoFactory.getIn();
 		traduitSrtDaoOut = daoFactory.getOut();
 
-		// et on le met dans la base de donnée
+		// et on le met le fichier d'entree dans la base de donnée
 		traduitSrtDaoTempo.write(traduitSrtDaoIn.read());
-
-		// on crée une instance traitement
-		traitement = new TraduitSrtTraitement();
-		chargement = new TraduitSrtImportFichier(); 
+		
+		fichier=false;
 
 	}
 
@@ -50,12 +51,14 @@ public class EditSubtitle extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		if (fichier)
+			request.setAttribute("FileNameDestination", traduitSrtDaoOut.getParameter()[0]);// !!!attention car on ne prend que le nom du fichier on estime que le chemin est bien celui fournis par le context 
+		else
+			request.setAttribute("FileNameDestination", "");
+		ArrayList<TraduitSrtPage> partiel=TraduitSrtPagination.pagination(request,response, traduitSrtDaoTempo.read());
+		
 		// on récupère les sous titre dans la base temporaire.
-		request.setAttribute("subtitles", traduitSrtDaoTempo.read());
-
-		// code qui ne doit plus servire
-		// request.setAttribute("FileNameSource", FileNameSource);
+		request.setAttribute("subtitles", partiel);
 
 		// demande d'affichage de la page
 		this.getServletContext().getRequestDispatcher("/WEB-INF/edit_subtitle.jsp").forward(request, response);
@@ -68,22 +71,24 @@ public class EditSubtitle extends HttpServlet {
 
 		// si on appuis sur le bouton charger
 		String donnee = request.getParameter("charger");
-
-		if (donnee != null && !donnee.isEmpty()) { // alors
-			
-			// on récupère le fichier dans traduitSrtDaoIn
-			chargement.chargement(request, response, traduitSrtDaoIn);
-			// et on le met dans la base de donnée
-			traduitSrtDaoTempo.write(traduitSrtDaoIn.read());
-			// on désactive le bouton chargement
-			request.setAttribute("FileNameDestination", "");
+		// on vérifie aussi il qu'il y a fichier cela permet de contourner un bug lorque l'on appuis sur entree dans le formulaire
+		// cela n'est pas très propre
+		String nomFichier = TraduitSrtImportFichier.getNomFichier(request.getPart("FileNameSource")); 
+		if (donnee != null && !donnee.isEmpty() && nomFichier != null && !nomFichier.isEmpty()) 
+		{ // alors
+			  // on récupère le fichier dans traduitSrtDaoIn
+			  TraduitSrtImportFichier.chargement(request, response, traduitSrtDaoIn);
+			  // et on le met dans la base de donnée
+			  traduitSrtDaoTempo.write(traduitSrtDaoIn.read());
+			  // on désactive le bouton chargement
+			  fichier=false;
 		} else { // sinon
 					// on enregistre les modifs dans la base temporaire
-			traitement.execut(request, response, traduitSrtDaoTempo);
+			TraduitSrtTraitement.execut(request, response, traduitSrtDaoTempo);
 			// on crée aussi le fichier de sortie
 			traduitSrtDaoOut.write(traduitSrtDaoTempo.read());
 			// on active le bouton chargement
-			request.setAttribute("FileNameDestination", traduitSrtDaoOut.getParameter()[0]);// !!!attention car on ne prend que le nom du fichier on estime que le chemin est bien celui fournis par le context 
+			fichier=true;
 		}
 
 		// on demande un affichage de la page

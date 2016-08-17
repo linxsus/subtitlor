@@ -9,7 +9,7 @@ import com.subtitlor.utilities.TraduitSrtPage;
 public interface TraduitSrtDao {
 	
 	/**
-	 * ecriture dans la base du tableau de structure TraduitSrt 
+	 * Écriture dans la base du tableau de structure TraduitSrt 
 	 * @param lignes
 	 *   tableau de structure TraduitSrt
 	 */

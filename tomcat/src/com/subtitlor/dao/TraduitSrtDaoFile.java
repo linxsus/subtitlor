@@ -60,13 +60,13 @@ public class TraduitSrtDaoFile implements TraduitSrtDao
 			String line;
 			// TODO
 			// enregistrement du fichier brute en mémoire pour accélérer les traitements.
-			// il y a surement plus propre.
+			// il y a sûrement plus propre.
 			while ((line = br.readLine()) != null)
 			{
 				textBrute.add(line);
 			}
 		} 
-		catch (IOException e) 
+		catch (Exception e) 
 		{
 			System.out.println("erreur lors de l'ouverture du fichier "+ chemin+fileName);
     		System.out.println(e);
@@ -78,7 +78,7 @@ public class TraduitSrtDaoFile implements TraduitSrtDao
 				//fermeture du fichier
 				br.close();
 			}
-			catch (IOException e) 
+			catch (Exception e) 
 			{
 				System.out.println("erreur dans la fermeture du fichier "+chemin+fileName);
 				System.out.println(e);
@@ -110,6 +110,7 @@ public class TraduitSrtDaoFile implements TraduitSrtDao
 			{
 				  line = line.substring(1);
 			}
+					
 			if (newSubtitle) // si on est sur une nouvelle page
 			{
 				try
@@ -121,7 +122,7 @@ public class TraduitSrtDaoFile implements TraduitSrtDao
 					
 					//on crée la nouvelle page dans le résultat avec comme index le N° de page  
 					result.add(index,new TraduitSrtPage());
-					result.get(index).setNumLigne(index+1);
+					result.get(index).setNumPage(index+1);
 					
 					newSubtitle=false; // la prochaine ligne de textbrut n'est pas une page 
 					newTime=true; // la prochaine ligne de textbrut est le temps d'une page
@@ -215,7 +216,7 @@ public class TraduitSrtDaoFile implements TraduitSrtDao
 		for (TraduitSrtPage traditSrt:Pages) //pour chaque page
 		{
 			// on récupère le N° de page
-			resultat.add(String.valueOf(traditSrt.getNumLigne()));
+			resultat.add(String.valueOf(traditSrt.getNumPage()));
 			// on récupère le temps de la page
 			resultat.add(traditSrt.getTime());
 			//on récupère les différente ligne
@@ -237,9 +238,7 @@ public class TraduitSrtDaoFile implements TraduitSrtDao
 
 	@Override
 	public void setParameter(String[] parameter)
-	{
-		// TODO il faut faire une verification des parameter
-		
+	{		
 		//si le nom du fichier a changer on refait une initialisation 
 		switch (parameter.length)
 		{
